@@ -52,8 +52,8 @@ params:
         subtitle: Just do it.
         avatar:
             enabled: true
-            local: true
-            src: img/avatar.png
+            local: false
+            src: https://raw.githubusercontent.com/MasonCodingHere/MasonHugoBlogPics1/main/MasonHugoBlogSite/avatar.png
 
     article:
         math: false
