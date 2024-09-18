@@ -1,5 +1,5 @@
 ---
-title: "BuildYourOwnLadder"
+title: "私人代理——搭建专属于你的梯子"
 description: 
 categories:
     - OverTheWall
@@ -14,4 +14,3 @@ comments: false
 draft: false
 ---
 
-## 购买VPS
