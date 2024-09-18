@@ -6,7 +6,7 @@ categories:
 tags:
     - VPS
 date: 2024-09-18T16:26:03+08:00
-image: “https://xtls.github.io/LogoX2.png”
+image: https://xtls.github.io/LogoX2.png
 math: 
 license: 
 hidden: false
@@ -26,29 +26,23 @@ draft: false
 
 # 购买VPS
 
-我们需要一个没有被墙的IP地址，购买一台海外VPS可以满足我们这个需求。
-
-## 何为VPS
-
-VPS其实就是一台位于海外的云服务器。
-
-## 购买VPS
+我们需要一个没有被墙的IP地址，购买一台海外VPS可以满足我们这个需求。VPS其实就是一台位于海外的云服务器。
 
 以Vultr为例，注册并登陆Vultr。
 
-### 选择VPS类型和位置
+## 选择VPS类型和位置
 
 ![select_type_and_location](https://raw.githubusercontent.com/MasonCodingHere/MasonHugoBlogPics1/main/BuildYourOwnLadder/select_type_and_location.png)
 
-### 选择系统镜像
+## 选择系统镜像
 
 ![choose_image](https://raw.githubusercontent.com/MasonCodingHere/MasonHugoBlogPics1/main/BuildYourOwnLadder/choose_image.png)
 
-### 选择Plan
+## 选择Plan
 
 ![choose_plan](https://raw.githubusercontent.com/MasonCodingHere/MasonHugoBlogPics1/main/BuildYourOwnLadder/choose_plan.png)
 
-### 其他设置
+## 其他设置
 
 去掉Auto Backups和IPv6。
 
@@ -58,7 +52,7 @@ VPS其实就是一台位于海外的云服务器。
 
 ![server_settings](https://raw.githubusercontent.com/MasonCodingHere/MasonHugoBlogPics1/main/BuildYourOwnLadder/server_setting.png)
 
-### 下单
+## 下单
 
 ![order](https://raw.githubusercontent.com/MasonCodingHere/MasonHugoBlogPics1/main/BuildYourOwnLadder/order.png)
 
