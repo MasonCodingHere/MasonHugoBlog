@@ -26,33 +26,51 @@ draft: false
 
 # 购买VPS
 
-我们需要一个没有被墙的IP地址，购买一台海外VPS可以满足我们这个需求。VPS其实就是一台位于海外的云服务器。
+我们需要一个没有被墙的IP地址，购买一台海外VPS可以满足这个需求。VPS其实就是一台位于海外的云服务器。
 
-以Vultr为例，注册并登陆Vultr。
+有很多VPS厂商，比如BandWagon、Vultr、CloudCone等等，本文以Vultr为例，其他的厂商也大同小异。
+
+注册并登陆[Vultr](https://www.vultr.com/)，点击右上角的Deploy按钮按以下步骤部署一台VPS。
 
 ## 选择VPS类型和位置
+
+类型选Shared CPU即可。
+
+位置看自己需求，这里以美国Los Angeles为例。
 
 ![select_type_and_location](https://raw.githubusercontent.com/MasonCodingHere/MasonHugoBlogPics1/main/BuildYourOwnLadder/select_type_and_location.png)
 
 ## 选择系统镜像
 
+选一个操作系统，服务器嘛，自然是要选Linux，推荐选择Debian，比较稳定。
+
 ![choose_image](https://raw.githubusercontent.com/MasonCodingHere/MasonHugoBlogPics1/main/BuildYourOwnLadder/choose_image.png)
 
 ## 选择Plan
+
+根据需求，选择一个配置，配置越高越贵。这里选择最便宜的5$/month的Plan。
 
 ![choose_plan](https://raw.githubusercontent.com/MasonCodingHere/MasonHugoBlogPics1/main/BuildYourOwnLadder/choose_plan.png)
 
 ## 其他设置
 
-去掉Auto Backups和IPv6。
+去掉Auto Backups，费钱。
+
+去掉IPv6，不需要。
 
 ![additional_features](https://raw.githubusercontent.com/MasonCodingHere/MasonHugoBlogPics1/main/BuildYourOwnLadder/additional_feature.png)
 
-可以SSH key
+这里可以把SSH key上传一下，把本地电脑`~/.ssh/`的**公钥**传到Vultr，这样等部署完可以直接密钥登陆，不用输密码，方便很多。
+
+在Server Hostname设置一下主机名，自己起个名即可，本文以Test为例。
 
 ![server_settings](https://raw.githubusercontent.com/MasonCodingHere/MasonHugoBlogPics1/main/BuildYourOwnLadder/server_setting.png)
 
 ## 下单
+
+这样就配好了，确认一下数量和价格，点击Deploy Now就开始部署了。
+
+> 部署过程或许需要几分钟，耐心等待一下。
 
 ![order](https://raw.githubusercontent.com/MasonCodingHere/MasonHugoBlogPics1/main/BuildYourOwnLadder/order.png)
 
