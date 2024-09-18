@@ -1,9 +1,8 @@
 ---
-title: "{{ replace .Name "-" " " | title }}"
+title: "BuildYourOwnLadder"
+categories: 
 description: 
-categories:
-tags:
-date: {{ .Date }}
+date: 2024-09-18T16:26:03+08:00
 image: 
 math: 
 license: 
@@ -12,3 +11,4 @@ comments: false
 draft: true
 ---
 
+## 购买VPS

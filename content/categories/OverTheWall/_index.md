@@ -2,7 +2,7 @@
 title: "Over the Wall"
 description: "All about going over the wall"
 slug: "overthewall"
-image: "https://github.com/vpncn/vpncn.github.io?tab=readme-ov-file#%E7%BF%BB%E5%A2%99%E8%BD%AF%E4%BB%B6vpn%E6%8E%A8%E8%8D%90%E7%A8%B3%E5%AE%9A%E5%A5%BD%E7%94%A8%E5%90%AB2021%E4%BC%98%E6%83%A0"
+image: "https://camo.githubusercontent.com/e3b28248bf7cc293113467ea5f90ab31d9799691203d98f3632c0bdbf1419370/68747470733a2f2f7777772e6c696e6b762e6f72672f696d672f77616c6c2d6d696e2e706e67"
 style:
     background: "#2a9d8f"
     color: "#fff"
