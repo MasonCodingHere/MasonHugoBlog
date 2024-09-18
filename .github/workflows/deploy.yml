@@ -19,8 +19,11 @@ jobs:
           hugo-version: '0.134.2'
           extended: true
       
-      - name: Install PostCSS
+      - name: Install PostCSS (required by Stack theme)
           run: npm install -g postcss postcss-cli autoprefixer
+
+      - name: Install Sass (if required by Stack theme)
+          run: npm install -g sass
       
       - name: Build the website
           run: hugo
