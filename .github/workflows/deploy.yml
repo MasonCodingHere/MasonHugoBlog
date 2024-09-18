@@ -18,9 +18,12 @@ jobs:
         with:
           hugo-version: '0.134.2'
           extended: true
-
+      
+      - name: Install PostCSS
+          run: npm install -g postcss postcss-cli autoprefixer
+      
       - name: Build the website
-        run: hugo
+          run: hugo
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
