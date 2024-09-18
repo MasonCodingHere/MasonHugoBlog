@@ -3,9 +3,6 @@ title: About
 description: Welcome To Mason's Blog
 date: '2024-09-17'
 aliases:
-  - about-us
-  - about-hugo
-  - contact
 license: CC BY-NC-ND
 lastmod: '2024-09-17'
 menu:
