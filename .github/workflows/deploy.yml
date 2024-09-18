@@ -20,13 +20,13 @@ jobs:
           extended: true
       
       - name: Install PostCSS (required by Stack theme)
-          run: npm install -g postcss postcss-cli autoprefixer
+        run: npm install -g postcss postcss-cli autoprefixer
 
       - name: Install Sass (if required by Stack theme)
-          run: npm install -g sass
+        run: npm install -g sass
       
       - name: Build the website
-          run: hugo
+        run: hugo
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
