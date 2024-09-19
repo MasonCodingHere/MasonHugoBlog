@@ -5,6 +5,7 @@ categories:
     - OverTheWall
 tags:
     - VPS
+    - XRay
 date: 2024-09-18T16:26:03+08:00
 image: https://xtls.github.io/LogoX2.png
 math: 
@@ -249,10 +250,15 @@ visudo
 3. 把公钥给新用户。
 
 ```bash
+# 切换至新用户leo
 su leo
+# 在新用户leo家目录下创建.ssh文件夹
 mkdir ~/.ssh
+# 修改.ssh文件夹权限
 chmod 700 ~/.ssh
+# 上传公钥。将引号内的内容替换为公钥值
 echo "公钥内容" >> ~/.ssh/authorized_keys
+# 修改authorized_keys文件权限
 chmod 600 ~/.ssh/authorized_keys
 ```
 
@@ -274,34 +280,341 @@ sudo service sshd restart
 
 这样，root用户就无法登陆了，以后用`leo`用户管理VPS。
 
-## 安装Fail2ban
+## 安装Fail2Ban
 
 ```bash
+# 安装Fail2Ban
 sudo apt update && sudo apt install fail2ban
-cd /etc/fail2ban # 进入fail2ban目录
-sudo cp fail2ban.conf fail2ban.local  # 复制一份配置文件 
-nano fail2ban.local #打开配置文件，以下内容粘贴在最下方
-
+# 建配置文件
+sudo nano /etc/fail2ban/jail.local
+# 将以下内容粘贴在打开文件中
 ******粘贴内容开始******
 [sshd]
-backend = systemd
-enable = ture
-port = 9753   # 注意改成自己对应的端口
-filter =sshd
+enabled = true
+port = 9753
+filter = sshd
 logpath = /var/log/auth.log
-maxretry = 3
-bantime = -1 # 永久封禁
+maxretry = 5
+bantime = 7200
+findtime = 600
 ******粘贴内容结束******
-
-$ sudo service fail2ban restart #重启
-$ sudo fail2ban-client status #查看状态
-$ sudo fail2ban-client status sshd #查看sshd的详细状态
-
-$ sudo fail2ban-client set sshd unbanip 192.0.0.1 #解禁指定IP
+# 启动Fail2Ban
+sudo systemctl start fail2ban
 ```
 
+> 上述配置的意思是：600秒内5次尝试登陆ssh的IP地址会被判7200秒有期徒刑。
 
+`Fail2Ban`常用命令:
 
-# 安装XRay-core
+```bash
+# 重启Fail2Ban
+sudo systemctl restart fail2ban
+# 查看fail2ban服务状态
+sudo systemctl status fail2ban
+# 将Fail2Ban设为开机启动
+sudo systemctl enable fail2ban
+# 查看状态
+sudo fail2ban-client status
+# 查看sshd jail的详细状态
+sudo fail2ban-client status sshd
+# 解禁指定IP
+sudo fail2ban-client set sshd unbanip 192.0.0.1
+```
 
-# Warp解锁chatGPT
+至此，VPS安全配置已经完成。接下开是真正的搭梯子环节。
+
+# XRay安装与配置
+
+不推荐用任何一键脚本，谁知道里边有没有藏什么东西。官方文档足够详细，安装配置足够简单。此部分详细内容可查阅[官方文档](https://xtls.github.io/document/)。
+
+## Install Xray
+
+GitHub仓库[Xray-install](https://github.com/XTLS/Xray-install)是[Xray官方](https://github.com/XTLS)提供的安装方式，在仓库`README`页可以找到官方安装脚本：
+
+```bash
+bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install
+```
+
+> 后期更新新版本也是这个命令。
+
+一键安装，足够简单吧。
+
+## Config Xray
+
+1. 生成一个合法的 `UUID` 并保存备用（`UUID`可以简单粗暴的理解为像指纹一样几乎不会重复的 ID）。
+
+   ```bash
+   xray uuid
+   ```
+
+   ![uuidgenerate](https://raw.githubusercontent.com/MasonCodingHere/MasonHugoBlogPics1/main/BuildYourOwnLadder/uuidgennerate.png)
+
+   这个`uuid`要留存，后边配置会用到。
+
+2. 修改Xray配置文件。
+
+   ```bash
+   sudo nano /usr/local/etc/xray/config.json
+   ```
+
+   将以下内容粘贴进去。只需修改`port`和`id`两项。本文`port`以`12345`为例，`id`以上一步生成的为例。
+
+   ```json
+   # 原始版本，VMess+Kcp，访问不了ChatGPT客户端
+   {
+     "log": {
+       "loglevel": "warning",
+       "access": "/var/log/xray/access.log", // 这是 Linux 的路径
+       "error": "/var/log/xray/error.log"
+     },
+     "inbounds": [
+       {
+         "port": 12345, // 服务器监听端口
+         "protocol": "vmess",    // 主传入协议
+         "settings": {
+           "clients": [
+             {
+               "id": "0061c282-49f7-41d7-b223-0a9b6d8675dd",  // uuid，客户端与服务器必须相同
+               "alterId": 0
+             }
+           ]
+         },
+         "streamSettings": {
+           "network": "kcp", //此处的 kcp 也可写成 mkcp，两种写法是起同样的效果
+           "kcpSettings": {
+             "uplinkCapacity": 15,
+             "downlinkCapacity": 100,
+             "congestion": true,
+             "readBufferSize": 1,
+             "writeBufferSize": 1,
+             "header": {
+               "type": "wireguard"
+             }
+           }
+         }
+       }
+     ],
+     "outbounds": [
+       {
+         "protocol": "freedom",  // 主传出协议
+         "settings": {}
+       }
+     ]
+   }
+   ```
+
+3. 开放在配置文件中指定的端口号。
+
+   ```bash
+   sudo ufw allow 12345/tcp comment "XRay"
+   sudo ufw allow 12345/udp comment "XRay"
+   ```
+
+   ![openport12345](https://raw.githubusercontent.com/MasonCodingHere/MasonHugoBlogPics1/main/BuildYourOwnLadder/openport12345.png)
+
+4. 启动Xray
+
+   ```bash
+   # 启动XRay
+   sudo systemctl start xray
+   # 将XRay设为开机启动
+   sudo systemctl enable xray
+   # 查看XRay运行状态
+   sudo systemctl status xray
+   ```
+
+   看到下图这样绿色的`active(running)`就说明XRay已成功启动，这样服务端就配置好了。
+
+   ![startxray](https://raw.githubusercontent.com/MasonCodingHere/MasonHugoBlogPics1/main/BuildYourOwnLadder/startxray.png)
+
+5. 开启BBR加速。
+
+   给 Debian 10 添加官方 `backports` 源，获取更新的软件库。
+
+   ```bash
+   sudo nano /etc/apt/sources.list
+   ```
+
+   然后把下面这一条加在最后，并保存退出。
+
+   ```text
+   deb http://archive.debian.org/debian buster-backports main
+   ```
+
+   刷新软件库并查询 Debian 官方的最新版内核并安装。请务必安装你的 VPS 对应的版本（本文以比较常见的【amd64】为例）。
+
+   ```bash
+   sudo apt update && sudo apt -t buster-backports install linux-image-amd64
+   ```
+
+   修改 `kernel` 参数配置文件 `sysctl.conf` 并指定开启 `BBR`
+
+   ```bash
+   sudo nano /etc/sysctl.conf
+   ```
+
+   把下面的内容添加进去
+
+   ```text
+   net.core.default_qdisc=fq
+   net.ipv4.tcp_congestion_control=bbr
+   ```
+
+   重启 VPS、使内核更新和`BBR`设置都生效。
+
+   ```bash
+   sudo reboot
+   ```
+
+   确认`BBR`开启。
+
+   ```bash
+   lsmod | grep bbr
+   ```
+
+   此时应该返回`tcp_bbr`这样的结果。
+
+   如果你想确认 `fq` 算法是否正确开启，可以使用下面的命令：
+
+   ```bash
+   lsmod | grep fq
+   ```
+
+   此时应该返回`sch_fq`这样的结果。
+
+6. 配置客户端。
+
+   服务端配置结束，接下来就是在你的客户端进行配置。根据客户端用的代理工具不同，配置方法也不太一样。但全都是根据服务端的配置进行。主要是把`IP:Port`和`uuid`配置为与服务端一致。
+
+   > 客户端配置就不细讲了。
+
+   这样，就已经可以科学上网了。只是无法使用ChatGPT客户端，因为ChatGPT对这些VPS厂商的IP进行了封锁。
+
+# Warp解锁ChatGPT
+
+> ChatGPT封锁了VPS厂商的IP地址，而Cloudflare的Warp可以提供供我们使用的IP地址，所以我们用Warp提供的IP地址去访问ChatGPT。但是，Warp提供的IPv4地址已经被滥用，也无法访问ChatGPT客户端了，所以我们用Warp IPv6。目标是访问寻常网站时用VPS的公网IPv4地址，访问ChatGPT时用Warp的IPv6地址。
+
+执行下面这个脚本安装WGCF。
+
+```bash
+wget -N https://gitlab.com/fscarmen/warp/-/raw/main/menu.sh && bash menu.sh
+```
+
+根据需要选择语言，本文选中文了。
+
+![chooselanguage](https://raw.githubusercontent.com/MasonCodingHere/MasonHugoBlogPics1/main/BuildYourOwnLadder/choose.png)
+
+因为我们这台VPS是IPv4 only的机器，没有IPv6地址，我们仅需要Warp提供IPv6地址，所以选择2. 为IPv4 only添加Warp IPv6网络接口。
+
+![addv6forv4only](https://raw.githubusercontent.com/MasonCodingHere/MasonHugoBlogPics1/main/BuildYourOwnLadder/add.png)
+
+工作模式选1.全局（默认）即可。
+
+![workmode](https://raw.githubusercontent.com/MasonCodingHere/MasonHugoBlogPics1/main/BuildYourOwnLadder/workmode.png)
+
+选择账户类型。这里根据自己的需要选择，我自己有WARP的团队版，即Zero Trust，所以选择3. Teams。
+
+![accountchoose](https://raw.githubusercontent.com/MasonCodingHere/MasonHugoBlogPics1/main/BuildYourOwnLadder/loginaccount.png)
+
+接下来就是登陆选择的账户。Teams账户选择2.通过组织名和邮箱验证码来登陆是比较方便的。
+
+![login](https://raw.githubusercontent.com/MasonCodingHere/MasonHugoBlogPics1/main/BuildYourOwnLadder/logincf.png)
+
+优先级别选择3.使用VPS初始设置（默认）即可。
+
+![46](https://raw.githubusercontent.com/MasonCodingHere/MasonHugoBlogPics1/main/BuildYourOwnLadder/choose46priority.png)
+
+这样WGCF会开始安装，等待安装完成，运行下面的命令，可以看到有一个叫`warp`的网卡。
+
+```bash
+sudo ifconfig
+```
+
+![warpcard](https://raw.githubusercontent.com/MasonCodingHere/MasonHugoBlogPics1/main/BuildYourOwnLadder/warpinter.png)
+
+这样VPS就有IPv6地址了。
+
+修改XRay的配置文件
+
+```bash
+sudo nano /usr/local/etc/xray/config.json
+```
+
+用下面的内容覆盖。将`IPv4`地址替换为你的VPS公网IPv4地址，将`IPv6`地址替换为warp网卡的地址。`uuid`和`port`也要替换为自己的。其他的不用更改。
+
+```json
+# Warp接管IPv6流量版本，VMess+Kcp，解锁ChatGPT客户端
+{
+  "log": {
+    "loglevel": "warning",
+    "access": "/var/log/xray/access.log", // 这是 Linux 的路径
+    "error": "/var/log/xray/error.log"
+  },
+  "inbounds": [
+    {
+      "port": 12345, // 服务器监听端口
+      "protocol": "vmess",    // 主传入协议
+      "settings": {
+        "clients": [
+          {
+            "id": "0061c282-49f7-41d7-b223-0a9b6d8675dd",  // uuID，客户端与服务器必须相同
+            "alterId": 0
+          }
+        ]
+      },
+      "streamSettings": {
+        "network": "kcp", //此处的 kcp 也可写成 mkcp，两种写法是起同样的效果
+        "kcpSettings": {
+          "uplinkCapacity": 15,
+          "downlinkCapacity": 100,
+          "congestion": true,
+          "readBufferSize": 1,
+          "writeBufferSize": 1,
+          "header": {
+            "type": "wireguard"
+          }
+        }
+      }
+    }
+  ],
+  "outbounds": [
+    {
+      "protocol": "freedom",  // 主传出协议
+      "settings": {
+        "domainStrategy": "UseIPv4"
+      },
+      "sendThrough": "100.200.300.400" //VPS公网IPv4地址
+    },
+    {
+      "tag": "warp",
+      "protocol": "freedom",
+      "settings": {
+        "domainStrategy": "UseIPv6"
+      },
+      "sendThrough": "2606:4700:110:88b8:5141:4387:4a3:20d1" //warp网卡IPv6地址
+    }
+  ],
+  "routing": {
+    "rules": [
+      {
+        "domain": [
+          "geosite:openai",
+          "geosite:bing",
+          "geosite:netflix"
+        ],
+        "outboundTag": "warp",
+        "type": "field"
+      }
+    ]
+  }
+}
+```
+
+重启XRay，并确认Xray已成功运行。
+
+```bash
+sudo systemctl start xray
+sudo systemctl status xray
+```
+
+在客户端连接该节点，可以发现ChatGPT客户端已经可以正常使用。
