@@ -5,6 +5,7 @@ categories:
 tags:
 date: {{ .Date }}
 image: 
+slug:
 math: 
 license: 
 hidden: false

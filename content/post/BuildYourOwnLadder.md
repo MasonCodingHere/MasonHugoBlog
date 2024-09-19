@@ -8,7 +8,7 @@ tags:
     - XRay
 date: 2024-09-18T16:26:03+08:00
 image: https://xtls.github.io/LogoX2.png
-slug: buildyourownladder
+slug: BuildYourOwnLadder
 math: 
 license: 
 hidden: false
