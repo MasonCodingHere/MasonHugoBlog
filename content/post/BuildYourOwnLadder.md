@@ -618,3 +618,10 @@ sudo systemctl status xray
 ```
 
 在客户端连接该节点，可以发现ChatGPT客户端已经可以正常使用。
+
+# References
+
+1. [Project X官方文档](https://xtls.github.io/document/)
+2. [保护好你的小鸡！保姆级服务器安全教程！](https://blog.laoda.de/archives/how-to-secure-a-linux-server)
+3. [vps 解锁 chatgpt](https://cn.v2ex.com/t/942922)
+4. [注册Cloudflare并加入ZeroTrust教程](https://surge.tel/13/2116/)
