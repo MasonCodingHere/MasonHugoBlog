@@ -2,7 +2,7 @@
 title: "私人代理——搭建专属于你的梯子"
 description: 
 categories:
-    - OverTheWall
+    - PassWall
 tags:
     - VPS
     - XRay
