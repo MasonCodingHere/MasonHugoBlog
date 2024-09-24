@@ -1,5 +1,6 @@
 # MasonHugoBlog
 [![Deploy Hugo to GitHub Pages](https://github.com/MasonCodingHere/MasonHugoBlog/actions/workflows/deploy.yml/badge.svg?branch=main&event=push)](https://github.com/MasonCodingHere/MasonHugoBlog/actions/workflows/deploy.yml)
+![Repo Size](https://img.shields.io/github/repo-size/MasonCodingHere/MasonHugoBlog)
 
 This repository is the Hugo blog source code.
 
