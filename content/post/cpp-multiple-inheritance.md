@@ -5,8 +5,8 @@ categories:
   - "C_C++"
 tags:
   - "C++"
-date: 2024-10-12T06:19:43-07:00
-image: https://raw.githubusercontent.com/MasonCodingHere/MasonHugoBlogPics1/main/DefaultImg/DefaultPostImg1.jpg
+date: 2021-06-22T06:19:43-07:00
+image:
 slug: "cpp-multiple-inheritance"
 math: 
 license: 
