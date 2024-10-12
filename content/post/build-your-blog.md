@@ -6,7 +6,6 @@ categories:
 tags:
   - "Hugo"
 date: 2024-09-20T15:18:02+08:00
-image: https://www.adamormsby.com/posts/000/how-to-set-up-a-hugo-site-on-github-pages-with-submodules/cover.jpg
 slug: "build-your-blog"
 math: 
 license: 

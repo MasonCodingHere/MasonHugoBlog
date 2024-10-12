@@ -6,7 +6,6 @@ categories:
 tags:
   - "C++"
 date: 2024-09-30T09:52:09+08:00
-image: https://raw.githubusercontent.com/MasonCodingHere/MasonHugoBlogPics1/main/DefaultImg/DefaultPostImg1.jpg
 slug: "things-about-new"
 math: 
 license: 

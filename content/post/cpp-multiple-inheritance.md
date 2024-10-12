@@ -6,7 +6,6 @@ categories:
 tags:
   - "C++"
 date: 2021-06-22T06:19:43-07:00
-image:
 slug: "cpp-multiple-inheritance"
 math: 
 license: 
