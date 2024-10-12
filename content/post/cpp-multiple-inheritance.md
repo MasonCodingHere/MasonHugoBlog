@@ -2,7 +2,7 @@
 title: "美人+鱼=美人鱼——谈C++多继承"
 description: 
 categories:
-  - "C/C++"
+  - "C_C++"
 tags:
   - "C++"
 date: 2024-10-12T06:19:43-07:00
